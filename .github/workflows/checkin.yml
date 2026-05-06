@@ -98,3 +98,13 @@ jobs:
       run: |
         echo "签到任务执行完成"
         echo "时间: $(Get-Date)"
+    - name: 防止 GitHub Actions 被停用（自动保活）
+      if: always()
+      shell: bash
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        date > keep_alive.txt
+        git add keep_alive.txt
+        git commit -m "chore: auto-keep-alive [skip ci]" || echo "No changes to commit"
+        git push
